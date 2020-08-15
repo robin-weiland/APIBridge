@@ -3,14 +3,29 @@
 
 __author__ = "Robin 'r0w' Weiland"
 __date__ = "2020-08-15"
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 __all__ = ()
 
 from pathlib import Path
 from setuptools import setup, find_packages
+from shutil import rmtree
+
+BUILD_DIRS = (
+    'api_bridge.egg-info',
+    'build',
+    'distR'
+
+)
+
 
 if __name__ == '__main__':
+    for d in BUILD_DIRS:
+        path = Path(d)
+        if path.exists() and path.is_dir():
+            print(f'Deleting {path}...')
+            rmtree(d)
+
     setup(
         name='api_bridge',
         version=__version__,
