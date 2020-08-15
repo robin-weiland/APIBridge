@@ -6,9 +6,9 @@ __date__ = "2020-08-15"
 __version__ = "0.0.1"
 
 __all__ = ()
+
 from pathlib import Path
 from setuptools import setup, find_packages
-
 
 if __name__ == '__main__':
     setup(
@@ -32,4 +32,7 @@ if __name__ == '__main__':
             'Programming Language :: Python :: 3.6',
             'Operating System :: OS Independent',
         ],
+        requires=[r.split('==')[0]
+                  for r in Path('requirements.txt').read_text().splitlines()
+                  if not (r.startswith('#') or r == '' or r == '\n')]
     )
