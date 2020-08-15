@@ -3,7 +3,7 @@
 
 __author__ = "Robin 'r0w' Weiland"
 __date__ = "2020-06-05"
-__version__ = "0.0.0"
+__version__ = "0.0.1"
 
 __all__ = ('API',)
 
