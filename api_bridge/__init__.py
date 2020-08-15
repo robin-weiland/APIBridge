@@ -8,5 +8,8 @@ __version__ = "0.0.1"
 __all__ = ('API',)
 
 from api_bridge.api import API
+from api_bridge.filter import Filter
+from api_bridge.methods import Method
+
 
 if __name__ == '__main__': pass
