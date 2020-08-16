@@ -20,6 +20,8 @@ class Container:
 
     def __getitem__(self, item: str) -> Any: return self.value[item]
 
+    def __eq__(self, other: 'Container') -> bool: return self.value == other.value
+
     def __str__(self) -> str: return str(self.value)
 
     def __repr__(self) -> str: return str(self)

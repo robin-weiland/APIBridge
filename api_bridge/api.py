@@ -10,7 +10,7 @@ __all__ = ('API',)
 from api_bridge.methods import Method
 from api_bridge.container import Container
 from api_bridge.url import valid_url
-from api_bridge.exceptions import APIException
+from api_bridge.exceptions import APIException, ValidationException
 
 from requests import request, Response
 from operator import gt
@@ -70,7 +70,7 @@ class API:
         except Exception as exc: raise APIException(f'{self.method}-request for {self.url} failed [{exc}]!')
         else:
             if not self.response.ok or (self.validate is not None and not self.validate(self.json())):
-                raise APIException(f'Response code from "{self.url}" was not ok or validation '
+                raise ValidationException(f'Response code from "{self.url}" was not ok or validation '
                                    f'"{self.validate.__name__ if self.validate is not None else None}" failed!')
 
     @staticmethod

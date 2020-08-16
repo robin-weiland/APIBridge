@@ -11,7 +11,7 @@ from api_bridge.api import API
 from api_bridge.filter import Filter
 from api_bridge.container import Container
 from api_bridge.methods import Method
-from api_bridge.exceptions import APIException
+from api_bridge.exceptions import APIException, ValidationException
 
 from unittest import TestCase
 
@@ -74,7 +74,7 @@ class APITest(TestCase):
 
     def testBadResponse(self):
         self.assertRaises(
-            APIException,
+            ValidationException,
             API.chain,
             API(FAIL_URL)
         )
@@ -88,6 +88,34 @@ class APITest(TestCase):
                 post_data={'success': 'False'},
                 validate=lambda data: data['form']['success'] == 'True')
         )
+
+    def testInit(self):
+        validate = lambda data: 'latitude' in data and 'longitude' in data
+        api = API(url=LOCATION_URL,
+                  method=Method.POST,
+                  result_filter=Filter(lat='latitude', long='longitude'),
+                  validate=validate,
+                  post_data=dict(date='today'))
+
+        self.assertEqual(LOCATION_URL,
+                         api.url,
+                         'Url not passed properly!')
+
+        self.assertEqual(Method.POST,
+                         api.method,
+                         'Method not passed properly!')
+
+        self.assertEqual(Filter(lat='latitude', long='longitude'),
+                         api.result_filter,
+                         'Filter not passed properly!')
+
+        self.assertEqual(validate,
+                         api.validate,
+                         'Validate not passed properly!')
+
+        self.assertEqual(dict(date='today'),
+                         api.post_data,
+                         'Post-Data not passed properly!')
 
 
 if __name__ == '__main__': pass
