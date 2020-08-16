@@ -3,7 +3,7 @@
 
 __author__ = "Robin 'r0w' Weiland"
 __date__ = "2020-08-15"
-__version__ = "0.0.3"
+__version__ = "0.0.5"
 
 __all__ = ('Filter',)
 
@@ -31,7 +31,7 @@ class Filter:
                 output[name] = item
         except KeyError as exc:
             raise APIException(f'Filter failed: key "{exc.args[0]}" not found in [{data}]! '
-                               f'Maybe consider implement a validation if this is related with the api!')
+                               f'Maybe consider implement a validation if this is related with the api!') from None
         return output
 
     def __eq__(self, other: 'Filter') -> bool: return self.out == other.out

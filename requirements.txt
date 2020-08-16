@@ -3,3 +3,6 @@ chardet==3.0.4
 idna==2.10
 requests==2.24.0
 urllib3==1.25.10
+
+contextdecorator~=0.10.0  ###
+setuptools~=49.6.0

@@ -3,15 +3,30 @@
 
 __author__ = "Robin 'r0w' Weiland"
 __date__ = "2020-08-15"
-__version__ = "0.0.3"
+__version__ = "0.0.5"
 
-__all__ = ('APIException', 'ValidationException',)
+__all__ = ('APIException', 'RequestException', 'ValidationException', 'FilterException', 'URLException',)
 
 
-class APIException(Exception): pass
+EXCEPTIONS: bool = True
+
+
+class APIException(Exception):
+    @classmethod
+    def raise_from(cls, *args):
+        if EXCEPTIONS: raise cls(*args)
+
+
+class RequestException(APIException): pass
 
 
 class ValidationException(APIException): pass
+
+
+class FilterException(APIException): pass
+
+
+class URLException(APIException): pass
 
 
 if __name__ == '__main__': pass

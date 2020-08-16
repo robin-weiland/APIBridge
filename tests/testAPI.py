@@ -3,7 +3,7 @@
 
 __author__ = "Robin 'r0w' Weiland"
 __date__ = "2020-08-15"
-__version__ = "0.0.3"
+__version__ = "0.0.5"
 
 __all__ = ()
 
@@ -11,9 +11,43 @@ from api_bridge.api import API
 from api_bridge.filter import Filter
 from api_bridge.container import Container
 from api_bridge.methods import Method
-from api_bridge.exceptions import APIException, ValidationException
+from api_bridge.exceptions import APIException, RequestException, ValidationException
 
 from unittest import TestCase
+
+# From https://github.com/dvl/python-internet-sabotage/; I could import it with pip
+
+import socket
+import sys
+from contextdecorator import ContextDecorator
+
+
+class no_connection(ContextDecorator):
+    _module = sys.modules[__name__]
+
+    def __init__(self, exception=IOError):
+        self.exception = exception
+
+    def _enable_socket(self):
+        setattr(self._module, '_socket_disabled', False)
+
+    def _disable_socket(self):
+        setattr(self._module, '_socket_disabled', True)
+
+        def guarded(*args, **kwargs):
+            if getattr(self._module, '_socket_disabled', False):
+                raise self.exception('Internet is disabled')
+
+            return socket.SocketType(*args, **kwargs)
+
+        socket.socket = guarded
+
+    def __enter__(self):
+        self._disable_socket()
+
+    def __exit__(self, *args, **kwargs):
+        self._enable_socket()
+
 
 from requests import get
 
@@ -31,11 +65,11 @@ def referenceAPI():
 
 class APITest(TestCase):
     def testChain(self):
-        result = (API.chain(
+        result = API.chain(
             API(LOCATION_URL, result_filter=Filter(lat='latitude', long='longitude')),
             API(TIME_URL,
                 validate=lambda response: response['status'] == 'OK', result_filter=Filter(sunrise='results sunrise'))
-        ))
+        )
 
         container = Container()
         container.value = referenceAPI()
@@ -62,8 +96,8 @@ class APITest(TestCase):
     def testInvalidURL(self):
         self.assertRaises(
             APIException,
-            API.chain,
-            API('test:hello:world')
+            API,
+            'test:hello:world'
         )
 
     def testJsonNoRequest(self):
@@ -116,6 +150,21 @@ class APITest(TestCase):
         self.assertEqual(dict(date='today'),
                          api.post_data,
                          'Post-Data not passed properly!')
+
+    def testAPIExceptionTest(self):
+        self.assertRaises(
+            APIException,
+            APIException.raise_from,
+            'this is a test'
+        )
+
+    def testNoInternet(self):
+        api = API('https://ipapi.co/json/', result_filter=Filter(lat='latitude', long='longitude'))
+        with no_connection():
+            self.assertRaises(
+                RequestException,
+                api.request,
+            )
 
 
 if __name__ == '__main__': pass

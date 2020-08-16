@@ -3,11 +3,12 @@
 
 __author__ = "Robin 'r0w' Weiland"
 __date__ = "2020-08-15"
-__version__ = "0.0.3"
+__version__ = "0.0.5"
 
 __all__ = ()
 
 from api_bridge.filter import Filter
+from api_bridge.exceptions import APIException
 from unittest import TestCase
 
 
@@ -22,8 +23,14 @@ class FilterTest(TestCase):
             'status': 'OK'
         }
 
-        self.expected = {'sunrise': '4:06:40 AM'}
-        f = Filter(snrise='results sunrise')
+        expected = {'sunrise': '4:06:40 AM'}
+        f = Filter(sunrise='results sunrise')
+
+        self.assertDictEqual(
+            expected,
+            f(data),
+            'Filter did not perform correctly!'
+        )
 
     def testFilterFlat(self):
         data = {
@@ -59,7 +66,24 @@ class FilterTest(TestCase):
         self.assertDictEqual(
             expected,
             f(data),
-            'Filter did not perform correctly!'
+            'Flat Filter did not perform correctly!'
+        )
+
+    def testBadFilter(self):
+        data = {
+            'results': {'sunrise': '4:06:40 AM', 'sunset': '6:33:30 PM', 'solar_noon': '11:20:05 AM',
+                        'day_length': '14:26:50', 'civil_twilight_begin': '3:30:47 AM',
+                        'civil_twilight_end': '7:09:23 PM', 'nautical_twilight_begin': '2:45:20 AM',
+                        'nautical_twilight_end': '7:54:50 PM', 'astronomical_twilight_begin': '1:52:18 AM',
+                        'astronomical_twilight_end': '8:47:52 PM'},
+            'status': 'OK'
+        }
+
+        f = Filter(sunrise='result sunrise')
+        self.assertRaises(
+            APIException,
+            f,
+            data
         )
 
 
