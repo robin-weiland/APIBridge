@@ -15,7 +15,7 @@ from api_bridge.exceptions import APIException, RequestException, ValidationExce
 from requests import request, Response
 from operator import gt
 
-from typing import Optional, Union, Callable, Dict, Any
+from typing import Optional, Union, Callable, Dict, Tuple, Any
 
 
 class API:
@@ -82,7 +82,7 @@ class API:
             current = gt(current, api)
         return current > Container()
 
-    def __class_getitem__(cls, *apis: 'API') -> Container:
+    def __class_getitem__(cls, apis: Tuple['API', ...]) -> Container:
         return cls.chain(*apis)
 
 

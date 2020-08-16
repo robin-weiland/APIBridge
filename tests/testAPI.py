@@ -79,6 +79,20 @@ class APITest(TestCase):
             'The chain operator does not work properly!'
         )
 
+    def testClassGetitem(self):
+        result = API[
+            API(LOCATION_URL, result_filter=Filter(lat='latitude', long='longitude')),
+            API(TIME_URL,
+                validate=lambda response: response['status'] == 'OK', result_filter=Filter(sunrise='results sunrise'))
+        ]
+        container = Container()
+        container.value = referenceAPI()
+        self.assertEqual(
+            container.value,
+            result.value,
+            'The class_getitem operator does not work properly!'
+        )
+
     def testCall(self):
         result = API('https://ipapi.co/json/', result_filter=Filter(lat='latitude', long='longitude')) > \
                  API('https://api.sunrise-sunset.org/json?lat={lat}&lng={long}&date=today', validate=lambda response:

@@ -86,5 +86,22 @@ class FilterTest(TestCase):
             data
         )
 
+    def testString(self):
+        d = dict(sunrise='results sunrise')
+        f = Filter(**d)
+
+        self.assertEqual(
+            f'Filter[{d}]',
+            str(f),
+            'String of filter was not correct!'
+        )
+
+        self.assertEqual(
+            str(f),
+            repr(f),
+            'repr() of Filter was not correct!'
+        )
+
+
 
 if __name__ == '__main__': pass
