@@ -32,7 +32,6 @@ class API:
                  url: str,
                  method: Method = Method.GET,
                  result_filter: Optional[Callable[[Dict[str, Any]], Dict[str, Any]]] = None,
-                 callback: Optional[Callable[[Dict[str, Any]], Dict[str, Any]]] = None,
                  validate: Optional[Callable[[Dict[str, Any]], bool]] = None,
                  post_data: Optional[Dict[str, Any]] = None
                  ):
@@ -41,7 +40,6 @@ class API:
         self.method = method
         self.response = None
         self.result_filter = result_filter
-        self.callback = callback
         self.validate = validate
         self.post_data = post_data
 
@@ -55,6 +53,8 @@ class API:
         self.request()
         other(self.result_filter(self.json()) if self.result_filter else self.json())
         return other
+
+    def __rshift__(self, other) -> Union['API', Container]: return self > other
 
     def __call__(self, filter_data=None):
         if filter_data is not None:

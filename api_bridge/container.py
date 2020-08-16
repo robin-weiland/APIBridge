@@ -18,6 +18,8 @@ class Container:
     def __call__(self, value) -> None:
         self.value = value
 
+    def __getitem__(self, item: str) -> Any: return self.value[item]
+
     def __str__(self) -> str: return str(self.value)
 
     def __repr__(self) -> str: return str(self)
