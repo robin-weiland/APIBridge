@@ -3,7 +3,7 @@
 
 __author__ = "Robin 'r0w' Weiland"
 __date__ = "2020-08-15"
-__version__ = "0.0.5"
+__version__ = "0.0.6"
 
 __all__ = ()
 
@@ -46,7 +46,7 @@ if __name__ == '__main__':
             'Programming Language :: Python :: 3.6',
             'Operating System :: OS Independent',
         ],
-        requires=[r.split('==')[0]
-                  for r in Path('requirements.txt').read_text().splitlines()
-                  if not (r.startswith('#') or r == '' or r == '\n' or r.endswith('###'))]
+        requires=[line.split('=')[0].rstrip('~<>=')
+                  for line in Path('requirements.txt').read_text().splitlines()
+                  if not (line.startswith('#') or line == '' or line == '\n' or line.endswith('###'))]
     )

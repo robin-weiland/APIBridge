@@ -3,12 +3,12 @@
 
 __author__ = "Robin 'r0w' Weiland"
 __date__ = "2020-08-15"
-__version__ = "0.0.5"
+__version__ = "0.0.6"
 
 __all__ = ()
 
 from api_bridge.url import valid_url
-from unittest import TestCase, main
+from unittest import TestCase
 
 
 class UrlTest(TestCase):

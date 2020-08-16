@@ -3,7 +3,7 @@
 
 __author__ = "Robin 'r0w' Weiland"
 __date__ = "2020-08-15"
-__version__ = "0.0.5"
+__version__ = "0.0.6"
 
 __all__ = ('Filter',)
 
